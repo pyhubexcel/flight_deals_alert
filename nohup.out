@@ -1,0 +1,531 @@
+INFO:     Will watch for changes in these directories: ['/home/python/python_projects/blaise']
+ERROR:    [Errno 98] Address already in use
+INFO:     Will watch for changes in these directories: ['/home/python/python_projects/blaise']
+ERROR:    [Errno 98] Address already in use
+INFO:     Will watch for changes in these directories: ['/home/python/python_projects/blaise']
+INFO:     Uvicorn running on http://0.0.0.0:8059 (Press CTRL+C to quit)
+INFO:     Started reloader process [181910] using StatReload
+INFO:     Started server process [181925]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     98.82.176.203:37776 - "GET / HTTP/1.1" 404 Not Found
+INFO:     49.36.144.145:50122 - "OPTIONS /v1/email-verification HTTP/1.1" 405 Method Not Allowed
+WARNING:  StatReload detected changes in 'app/routes.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [181925]
+INFO:     Started server process [186736]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     49.36.144.145:50228 - "OPTIONS /v1/email-verification HTTP/1.1" 200 OK
+INFO:     49.36.144.145:50230 - "POST /v1/email-verification HTTP/1.1" 201 Created
+INFO:     49.36.144.145:50934 - "OPTIONS /v1/email-verification HTTP/1.1" 200 OK
+INFO:     49.36.144.145:50935 - "POST /v1/email-verification HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 941, in do_execute
+    cursor.execute(statement, parameters)
+psycopg2.errors.UniqueViolation: duplicate key value violates unique constraint "user_info_email_id_key"
+DETAIL:  Key (email_id)=(test@gmail.com) already exists.
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/uvicorn/protocols/http/h11_impl.py", line 406, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/fastapi/applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/starlette/applications.py", line 113, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/starlette/middleware/errors.py", line 187, in __call__
+    raise exc
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/starlette/middleware/errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/starlette/middleware/cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/starlette/middleware/cors.py", line 144, in simple_response
+    await self.app(scope, receive, send)
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/starlette/middleware/exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/starlette/_exception_handler.py", line 62, in wrapped_app
+    raise exc
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/starlette/_exception_handler.py", line 51, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/starlette/routing.py", line 715, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/starlette/routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/starlette/routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/starlette/routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/starlette/_exception_handler.py", line 62, in wrapped_app
+    raise exc
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/starlette/_exception_handler.py", line 51, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/starlette/routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/fastapi/routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/fastapi/routing.py", line 214, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/starlette/concurrency.py", line 39, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func, *args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/anyio/to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2405, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 914, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/python/python_projects/blaise/app/routes.py", line 121, in registration
+    db.commit()
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 2028, in commit
+    trans.commit(_to_root=True)
+  File "<string>", line 2, in commit
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/orm/state_changes.py", line 139, in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 1313, in commit
+    self._prepare_impl()
+  File "<string>", line 2, in _prepare_impl
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/orm/state_changes.py", line 139, in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 1288, in _prepare_impl
+    self.session.flush()
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 4352, in flush
+    self._flush(objects)
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 4487, in _flush
+    with util.safe_reraise():
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 4448, in _flush
+    flush_context.execute()
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/orm/unitofwork.py", line 466, in execute
+    rec.execute(self)
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/orm/unitofwork.py", line 642, in execute
+    util.preloaded.orm_persistence.save_obj(
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/orm/persistence.py", line 93, in save_obj
+    _emit_insert_statements(
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/orm/persistence.py", line 1233, in _emit_insert_statements
+    result = connection.execute(
+             ^^^^^^^^^^^^^^^^^^^
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1418, in execute
+    return meth(
+           ^^^^^
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/sql/elements.py", line 515, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1640, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 2355, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 941, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.IntegrityError: (psycopg2.errors.UniqueViolation) duplicate key value violates unique constraint "user_info_email_id_key"
+DETAIL:  Key (email_id)=(test@gmail.com) already exists.
+
+[SQL: INSERT INTO user_info (email_id) VALUES (%(email_id)s) RETURNING user_info.id]
+[parameters: {'email_id': 'test@gmail.com'}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+WARNING:  StatReload detected changes in 'app/routes.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [186736]
+INFO:     Started server process [214648]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     49.36.144.145:51082 - "POST /v1/email-verification HTTP/1.1" 400 Bad Request
+INFO:     49.36.144.145:51140 - "POST /v1/email-verification HTTP/1.1" 400 Bad Request
+INFO:     49.36.144.145:51215 - "POST /v1/email-verification HTTP/1.1" 400 Bad Request
+INFO:     49.36.144.145:51240 - "POST /v1/email-verification HTTP/1.1" 201 Created
+INFO:     49.36.144.145:51600 - "OPTIONS /v1/email-verification HTTP/1.1" 200 OK
+INFO:     49.36.144.145:51601 - "POST /v1/email-verification HTTP/1.1" 400 Bad Request
+INFO:     49.36.144.145:51607 - "POST /v1/email-verification HTTP/1.1" 201 Created
+INFO:     49.36.144.145:52248 - "OPTIONS /v1/email-verification HTTP/1.1" 200 OK
+INFO:     49.36.144.145:52250 - "POST /v1/email-verification HTTP/1.1" 201 Created
+INFO:     49.36.144.145:52396 - "POST /v1/user-flight-details HTTP/1.1" 201 Created
+INFO:     49.36.144.145:55773 - "OPTIONS /v1/email-verification HTTP/1.1" 200 OK
+INFO:     49.36.144.145:55775 - "POST /v1/email-verification HTTP/1.1" 201 Created
+INFO:     49.36.144.145:55809 - "OPTIONS /v1/user-flight-details HTTP/1.1" 200 OK
+INFO:     49.36.144.145:55810 - "POST /v1/user-flight-details HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 941, in do_execute
+    cursor.execute(statement, parameters)
+psycopg2.errors.ForeignKeyViolation: insert or update on table "flight_booking_info" violates foreign key constraint "flight_booking_info_user_id_fkey"
+DETAIL:  Key (user_id)=(1) is not present in table "user_info".
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/uvicorn/protocols/http/h11_impl.py", line 406, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/fastapi/applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/starlette/applications.py", line 113, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/starlette/middleware/errors.py", line 187, in __call__
+    raise exc
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/starlette/middleware/errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/starlette/middleware/cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/starlette/middleware/cors.py", line 144, in simple_response
+    await self.app(scope, receive, send)
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/starlette/middleware/exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/starlette/_exception_handler.py", line 62, in wrapped_app
+    raise exc
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/starlette/_exception_handler.py", line 51, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/starlette/routing.py", line 715, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/starlette/routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/starlette/routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/starlette/routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/starlette/_exception_handler.py", line 62, in wrapped_app
+    raise exc
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/starlette/_exception_handler.py", line 51, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/starlette/routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/fastapi/routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/fastapi/routing.py", line 214, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/starlette/concurrency.py", line 39, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func, *args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/anyio/to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2405, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 914, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/python/python_projects/blaise/app/routes.py", line 151, in registration
+    db.commit()
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 2028, in commit
+    trans.commit(_to_root=True)
+  File "<string>", line 2, in commit
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/orm/state_changes.py", line 139, in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 1313, in commit
+    self._prepare_impl()
+  File "<string>", line 2, in _prepare_impl
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/orm/state_changes.py", line 139, in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 1288, in _prepare_impl
+    self.session.flush()
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 4352, in flush
+    self._flush(objects)
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 4487, in _flush
+    with util.safe_reraise():
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 4448, in _flush
+    flush_context.execute()
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/orm/unitofwork.py", line 466, in execute
+    rec.execute(self)
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/orm/unitofwork.py", line 642, in execute
+    util.preloaded.orm_persistence.save_obj(
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/orm/persistence.py", line 93, in save_obj
+    _emit_insert_statements(
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/orm/persistence.py", line 1233, in _emit_insert_statements
+    result = connection.execute(
+             ^^^^^^^^^^^^^^^^^^^
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1418, in execute
+    return meth(
+           ^^^^^
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/sql/elements.py", line 515, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1640, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 2355, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 941, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.IntegrityError: (psycopg2.errors.ForeignKeyViolation) insert or update on table "flight_booking_info" violates foreign key constraint "flight_booking_info_user_id_fkey"
+DETAIL:  Key (user_id)=(1) is not present in table "user_info".
+
+[SQL: INSERT INTO flight_booking_info (first_name, last_name, start_destination, end_destination, start_destination_country, end_destination_country, start_date, end_date, user_id) VALUES (%(first_name)s, %(last_name)s, %(start_destination)s, %(end_destination)s, %(start_destination_country)s, %(end_destination_country)s, %(start_date)s, %(end_date)s, %(user_id)s) RETURNING flight_booking_info.id]
+[parameters: {'first_name': 'test', 'last_name': 'test', 'start_destination': 'noida', 'end_destination': 'mumbai', 'start_destination_country': 'india', 'end_destination_country': 'india', 'start_date': datetime.date(2024, 10, 7), 'end_date': datetime.date(2024, 10, 10), 'user_id': 1}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+INFO:     49.36.144.145:57254 - "OPTIONS /v1/email-verification HTTP/1.1" 200 OK
+INFO:     49.36.144.145:57256 - "POST /v1/email-verification HTTP/1.1" 400 Bad Request
+INFO:     49.36.144.145:57261 - "POST /v1/email-verification HTTP/1.1" 201 Created
+INFO:     49.36.144.145:57299 - "OPTIONS /v1/user-flight-details HTTP/1.1" 200 OK
+INFO:     49.36.144.145:57300 - "POST /v1/user-flight-details HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 941, in do_execute
+    cursor.execute(statement, parameters)
+psycopg2.errors.ForeignKeyViolation: insert or update on table "flight_booking_info" violates foreign key constraint "flight_booking_info_user_id_fkey"
+DETAIL:  Key (user_id)=(1) is not present in table "user_info".
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/uvicorn/protocols/http/h11_impl.py", line 406, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/fastapi/applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/starlette/applications.py", line 113, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/starlette/middleware/errors.py", line 187, in __call__
+    raise exc
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/starlette/middleware/errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/starlette/middleware/cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/starlette/middleware/cors.py", line 144, in simple_response
+    await self.app(scope, receive, send)
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/starlette/middleware/exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/starlette/_exception_handler.py", line 62, in wrapped_app
+    raise exc
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/starlette/_exception_handler.py", line 51, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/starlette/routing.py", line 715, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/starlette/routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/starlette/routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/starlette/routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/starlette/_exception_handler.py", line 62, in wrapped_app
+    raise exc
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/starlette/_exception_handler.py", line 51, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/starlette/routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/fastapi/routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/fastapi/routing.py", line 214, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/starlette/concurrency.py", line 39, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func, *args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/anyio/to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2405, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 914, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/python/python_projects/blaise/app/routes.py", line 151, in registration
+    db.commit()
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 2028, in commit
+    trans.commit(_to_root=True)
+  File "<string>", line 2, in commit
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/orm/state_changes.py", line 139, in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 1313, in commit
+    self._prepare_impl()
+  File "<string>", line 2, in _prepare_impl
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/orm/state_changes.py", line 139, in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 1288, in _prepare_impl
+    self.session.flush()
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 4352, in flush
+    self._flush(objects)
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 4487, in _flush
+    with util.safe_reraise():
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 4448, in _flush
+    flush_context.execute()
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/orm/unitofwork.py", line 466, in execute
+    rec.execute(self)
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/orm/unitofwork.py", line 642, in execute
+    util.preloaded.orm_persistence.save_obj(
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/orm/persistence.py", line 93, in save_obj
+    _emit_insert_statements(
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/orm/persistence.py", line 1233, in _emit_insert_statements
+    result = connection.execute(
+             ^^^^^^^^^^^^^^^^^^^
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1418, in execute
+    return meth(
+           ^^^^^
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/sql/elements.py", line 515, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1640, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 2355, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "/home/python/python_projects/blaise/env/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 941, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.IntegrityError: (psycopg2.errors.ForeignKeyViolation) insert or update on table "flight_booking_info" violates foreign key constraint "flight_booking_info_user_id_fkey"
+DETAIL:  Key (user_id)=(1) is not present in table "user_info".
+
+[SQL: INSERT INTO flight_booking_info (first_name, last_name, start_destination, end_destination, start_destination_country, end_destination_country, start_date, end_date, user_id) VALUES (%(first_name)s, %(last_name)s, %(start_destination)s, %(end_destination)s, %(start_destination_country)s, %(end_destination_country)s, %(start_date)s, %(end_date)s, %(user_id)s) RETURNING flight_booking_info.id]
+[parameters: {'first_name': 'John', 'last_name': 'Deo', 'start_destination': 'Noida', 'end_destination': 'Mumbai', 'start_destination_country': 'India', 'end_destination_country': 'India', 'start_date': datetime.date(2024, 10, 7), 'end_date': datetime.date(2024, 10, 17), 'user_id': 1}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+INFO:     49.36.144.145:57387 - "POST /v1/user-flight-details HTTP/1.1" 201 Created
+INFO:     49.36.144.145:49831 - "OPTIONS /v1/email-verification HTTP/1.1" 200 OK
+INFO:     49.36.144.145:49837 - "POST /v1/email-verification HTTP/1.1" 400 Bad Request
+INFO:     49.36.144.145:49845 - "POST /v1/email-verification HTTP/1.1" 201 Created
+INFO:     49.36.144.145:50542 - "OPTIONS /v1/user-flight-details HTTP/1.1" 200 OK
+INFO:     49.36.144.145:50543 - "POST /v1/user-flight-details HTTP/1.1" 201 Created
+INFO:     49.36.144.145:50752 - "POST /v1/user-flight-details HTTP/1.1" 422 Unprocessable Entity
+INFO:     49.36.144.145:50760 - "POST /v1/user-flight-details HTTP/1.1" 422 Unprocessable Entity
+INFO:     49.36.144.145:50793 - "POST /v1/user-flight-details HTTP/1.1" 422 Unprocessable Entity
+INFO:     49.36.144.145:51227 - "OPTIONS /v1/user-flight-details HTTP/1.1" 200 OK
+INFO:     49.36.144.145:51230 - "POST /v1/user-flight-details HTTP/1.1" 422 Unprocessable Entity
+INFO:     49.36.144.145:51250 - "POST /v1/user-flight-details HTTP/1.1" 422 Unprocessable Entity
+INFO:     49.36.144.145:52960 - "OPTIONS /v1/user-flight-details HTTP/1.1" 200 OK
+INFO:     49.36.144.145:52961 - "POST /v1/user-flight-details HTTP/1.1" 201 Created
+WARNING:  StatReload detected changes in 'app/test.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [214648]
+INFO:     Started server process [680650]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  StatReload detected changes in 'app/routes.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [680650]
+INFO:     Started server process [723374]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     49.47.71.59:55507 - "OPTIONS /v1/email-verification HTTP/1.1" 200 OK
+INFO:     49.47.71.59:55508 - "POST /v1/email-verification HTTP/1.1" 400 Bad Request
+INFO:     49.47.71.59:55597 - "POST /v1/email-verification HTTP/1.1" 201 Created
+INFO:     49.47.71.59:55751 - "POST /v1/email-verification HTTP/1.1" 201 Created
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+INFO:     119.82.85.116:39316 - "OPTIONS /v1/email-verification HTTP/1.1" 200 OK
+INFO:     119.82.85.116:39316 - "POST /v1/email-verification HTTP/1.1" 201 Created
+INFO:     49.36.188.123:53466 - "OPTIONS /v1/email-verification HTTP/1.1" 200 OK
+INFO:     49.36.188.123:53466 - "POST /v1/email-verification HTTP/1.1" 201 Created
+INFO:     49.36.188.123:47152 - "OPTIONS /v1/user-flight-details HTTP/1.1" 200 OK
+INFO:     49.36.188.123:47162 - "POST /v1/user-flight-details HTTP/1.1" 201 Created
+INFO:     49.36.188.123:37424 - "POST /v1/email-verification HTTP/1.1" 201 Created
+INFO:     49.36.188.123:51292 - "OPTIONS /v1/user-flight-details HTTP/1.1" 200 OK
+INFO:     49.36.188.123:51292 - "POST /v1/user-flight-details HTTP/1.1" 201 Created
+INFO:     49.36.188.123:36450 - "GET //v1/alert/20 HTTP/1.1" 404 Not Found
+INFO:     49.36.188.123:36450 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     49.36.188.123:36458 - "GET /v1/alert/20 HTTP/1.1" 200 OK
+INFO:     49.36.188.123:47268 - "GET /v1/alert/20 HTTP/1.1" 200 OK
+INFO:     52.89.103.56:3365 - "GET /v1/alert/20 HTTP/1.1" 200 OK
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+INFO:     165.225.210.153:11704 - "GET /v1/alert/20 HTTP/1.1" 200 OK
+INFO:     165.225.210.153:11704 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+INFO:     209.89.245.204:58813 - "GET /v1/alert/20 HTTP/1.1" 200 OK
+INFO:     209.89.245.204:58813 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+INFO:     209.89.245.204:56868 - "GET /v1/alert/20 HTTP/1.1" 200 OK
+INFO:     209.89.245.204:56868 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+INFO:     49.47.71.59:59178 - "OPTIONS /v1/email-verification HTTP/1.1" 200 OK
+INFO:     49.47.71.59:59179 - "POST /v1/email-verification HTTP/1.1" 201 Created
+INFO:     49.47.71.59:59348 - "POST /v1/email-verification HTTP/1.1" 201 Created
+INFO:     49.47.71.59:49623 - "OPTIONS /v1/user-flight-details HTTP/1.1" 200 OK
+INFO:     49.47.71.59:59560 - "POST /v1/user-flight-details HTTP/1.1" 201 Created
+INFO:     119.82.85.116:52654 - "GET /v1/alert/20 HTTP/1.1" 200 OK
+INFO:     119.82.85.116:52654 - "GET /favicon.ico HTTP/1.1" 404 Not Found
