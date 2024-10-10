@@ -1,25 +1,26 @@
 import os
-from uuid import UUID
-import asyncio
+import uuid
 import datetime
-from datetime import date
-from .models import User, FlightBookingInfo, FlightInfo, SessionLocal
+from datetime import date, timedelta
+from typing import List, Optional
+
 # from dotenv import load_dotenv
 
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException, Depends, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
-from typing import List, Optional
-from .utils import (validate_email, format_location_kiwi,
-                     format_location_kayak)
-from fastapi_mail import FastMail, MessageSchema,ConnectionConfig
-from .kiwi import kiwimain
-from .kayak import kayakmain
 from celery import Celery
-# from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session, sessionmaker
+
+from .utils import (validate_email, format_location_kiwi,
+                     format_location_kayak, flight_details_email,
+                     send_verification_email, generate_magic_link)
+from .kiwi import kiwimain
+from .kayak import kayakmain
+from .models import (User, FlightBookingInfo, FlightInfo,
+                     VerificationToken, SessionLocal)
 
 app1 = FastAPI()
 
@@ -30,19 +31,6 @@ app1.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],  
     allow_headers=["*"],  
-)
-
-
-conf = ConnectionConfig(
-   MAIL_USERNAME="atul.etech2011@gmail.com",
-   MAIL_PASSWORD="aqvyqthjlhrurdrh",
-   MAIL_PORT=587,
-   MAIL_SERVER="smtp.gmail.com",
-   MAIL_FROM="atul.etech2011@gmail.com",  # Add this field
-   USE_CREDENTIALS=True,
-   MAIL_STARTTLS=True,
-    MAIL_SSL_TLS=False,
-   VALIDATE_CERTS=True
 )
 
 CELERY_BROKER_URL = "redis://localhost:6379/0"
@@ -102,13 +90,14 @@ class FlightBookingDetails(BaseModel):
     last_name: str
     user_id: int
 
+
 class Alert(BaseModel):
     origin_city : str
     destination_city: str
     start_date: date
 
 
-@app1.post("/v1/email-verification") 
+@app1.post("/v1/register/")
 def registration(user_details: Userinfo, db: Session = Depends(get_db)):
     email_id = user_details.email_id
     if not email_id:
@@ -119,20 +108,53 @@ def registration(user_details: Userinfo, db: Session = Depends(get_db)):
         existing_user = db.query(User).filter(User.email_id == email_id).first()
         if existing_user:
             return JSONResponse(status_code=400, content={"message": "Email already exists"})
-        
-        user_email = User(email_id=email_id)
+        created_at = date.today()
+        user_email = User(email_id=email_id, created_at=created_at, islogin=1, isauthenticated=1)
         db.add(user_email)
         db.commit()
-        return JSONResponse(status_code=201, content={"message": "Your email is registered"})
+        return JSONResponse(status_code=201, content={"message": "Your email is registered",
+                                                "user_email": user_email.email_id, "user_id": user_email.id})
     return JSONResponse(status_code=400, content={"message": "Please provide a valid email format"})
 
 
-@app1.post("/v1/user-flight-details") 
-def registration(flight_booking: FlightBookingDetails, db: Session = Depends(get_db)):
+@app1.post("/v1/login/")
+def login(user_details: Userinfo, db: Session = Depends(get_db)):
+    email_id = user_details.email_id
+    if not email_id:
+        return JSONResponse(status_code=400, content={"message": "Please provide a valid email address"})
+    
+    email_isvalid = validate_email(email_id)
+    if email_isvalid:
+        existing_user = db.query(User).filter(User.email_id == email_id).first()
+        if not existing_user:
+            return JSONResponse(status_code=400, content={"message": "Email does not exists with us"})
+        verification_token = db.query(VerificationToken).filter(
+        VerificationToken.user_id == existing_user.id).first()
+        token = str(uuid.uuid4())
+        expires_at = datetime.datetime.now() + timedelta(hours=2)
+        if verification_token:
+            verification_token.token = token
+            verification_token.expires_at = expires_at
+            verification_token.is_used = False
+            db.commit()
+        else:
+            verification_token = VerificationToken(
+                user_id=existing_user.id, token=token, expires_at=expires_at
+            )
+            db.add(verification_token)
+            db.commit()
+        magic_link = generate_magic_link(token)
+        send_verification_email(email_id, magic_link)
+        return JSONResponse(status_code=201, content={"message": "Verification Email is send at your registered email_id and will be valid for only two hours"})
+    return JSONResponse(status_code=400, content={"message": "Please provide a valid email format"})
+
+
+@app1.post("/v1/user-flight-details/{user_id}") 
+def registration(flight_booking: FlightBookingDetails, user_id: int, db: Session = Depends(get_db)):
     origin_city = flight_booking.origin_city
     destination_city = flight_booking.destination_city
     country_name_origin = flight_booking.country_name_origin
-    country_name_destination = flight_booking.country_name_origin
+    country_name_destination = flight_booking.country_name_destination
     start_date = flight_booking.start_date
     end_date = flight_booking.end_date
     user_id = flight_booking.user_id
@@ -150,6 +172,37 @@ def registration(flight_booking: FlightBookingDetails, db: Session = Depends(get
     db.add(flight_info)
     db.commit()
     return JSONResponse(status_code=201, content={"message": "Flight details are saved"})
+
+
+@app1.get("/verify/{token}")
+def verify_user(token: str, db: Session = Depends(get_db)):
+    # Find the verification token in the database
+    try:
+        verification_token = db.query(VerificationToken).filter(VerificationToken.token == token).one()
+    except Exception:
+        return JSONResponse(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            content="Invalid token"
+        )
+
+    # Check if the token is already used or expired
+    if verification_token.is_used:
+        return JSONResponse(
+            content="Token has already been used",
+            status_code=status.HTTP_400_BAD_REQUEST
+        )
+
+    if datetime.datetime.now() > verification_token.expires_at:
+        return JSONResponse(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            content="Token has expired"
+        )
+
+    verification_token.is_used = True
+    db.commit()
+
+    return {"message": "Email verified successfully!"}
+
 
 @app1.get("/v1/alert/{flight_booking_id}")
 def alert(flight_booking_id: int, db: Session = Depends(get_db)):
@@ -188,42 +241,39 @@ def alert(flight_booking_id: int, db: Session = Depends(get_db)):
     if not matching_flights:
         raise HTTPException(status_code=404, detail="No matching flights found")
 
-    send_email_sync(flight_details)
-
-    # message = MessageSchema(
-    #    subject="Fastapi-Mail module",
-    #    recipients=["aayush.excel2011@gmail.com"],
-    #    body=str(flight_details),
-    #    subtype="plain" 
-    #    )
-
-    # fm = FastMail(conf)
-    # fm.send_message(message)  # No need for await, it's a synchronous call
-
-
-
+    flight_details_email(flight_details)
     return JSONResponse(
-    status_code=200, 
-    content={
-        "message": "Email sent successfully with matching flight details", 
-        "data": flight_details
+        status_code=200, 
+        content={
+            "message": "Email sent successfully with matching flight details", 
+            "data": flight_details
         }
     )
 
-def send_email_sync(flight_details):
-    message = MessageSchema(
-       subject="Fastapi-Mail module",
-       recipients=["aayush.excel2011@gmail.com"],
-       body=str(flight_details),
-       subtype="plain" 
-       )
-    
-    fm = FastMail(conf)
-    # Running the async function synchronously
-    asyncio.run(fm.send_message(message))
+@app1.get("/v1/get-profile")
+def profile_details(user_details:Userinfo, db: Session = Depends(get_db)):
+    email_id = user_details.email_id
+    existing_user = db.query(User).filter(User.email_id == email_id).first()
+    if existing_user.islogin==True:
+        user_info = {
+            "email_id": existing_user.email_id,
+            "created_at": existing_user.created_at
+        }
+        return JSONResponse(
+        status_code=200, 
+        content={
+            "data": user_info
+        }
+    )
+    if existing_user.islogin==True:
+        return JSONResponse(status=400, content = {"error": "You are not authenticated"})
 
-
-
-
+  
+@app1.post("/v1/logout/{user_id}")
+def logout(user_id: int, db: Session = Depends(get_db)):
+    existing_user = db.query(User).filter(User.id == user_id).first()
+    existing_user.islogin = False
+    existing_user.isauthenticated = False
+    return JSONResponse(status=200, content={"mesage": "You ahve been logged out"})
 
 

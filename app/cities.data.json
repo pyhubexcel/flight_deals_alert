@@ -1,0 +1,51 @@
+{
+    "cities": {
+
+      "Edmonton Alberta": {
+        "airport_codes": ["YEG"],
+        "country": "Canada"
+      },
+
+      "Cairo": {
+        "airport_codes": ["CAI"],
+        "country": "Egypt"
+      },
+      "Lagos": {
+        "airport_codes": ["LOS"],
+        "country": "Nigeria"
+      },
+      "Dar es Salaam": {
+        "airport_codes": ["DAR"],
+        "country": "Tanzania"
+      },
+      "Luanda": {
+        "airport_codes": ["LAD"],
+        "country": "Angola"
+      },
+      "Kano": {
+        "airport_codes": ["KAN"],
+        "country": "Nigeria"
+      },
+      "Kigali": {
+        "airport_codes": ["KGL"],
+        "country": "Rwanda"
+      },
+      "Nairobi": {
+        "airport_codes": ["NBO"],
+        "country": "Kenya"
+      },
+      "Alexandria": {
+        "airport_codes": ["HBE"],
+        "country": "Egypt"
+      },
+      "Mogadishu": {
+        "airport_codes": ["MGQ"],
+        "country": "Somalia"
+      },
+      "Dakar": {
+        "airport_codes": ["DSS"],
+        "country": "Senegal"
+      }
+    }
+  }
+  
