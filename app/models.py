@@ -35,6 +35,7 @@ class User(Base):
     email_id = Column(String(50), unique=True, nullable=False)
     islogin = Column(Boolean, default=False, nullable=False)
     isauthenticated = Column(Boolean, default=False, nullable=False)
+    isprofilecompleted = Column(Boolean, default=False, nullable=False)
     created_at = Column(Date, default=False, nullable=False)
 
 class FlightBookingInfo(Base):

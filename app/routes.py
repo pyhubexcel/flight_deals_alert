@@ -126,6 +126,8 @@ def login(user_details: Userinfo, db: Session = Depends(get_db)):
     email_isvalid = validate_email(email_id)
     if email_isvalid:
         existing_user = db.query(User).filter(User.email_id == email_id).first()
+        if existing_user.islogin==1:
+            return JSONResponse(status_code=400, content={"message": "Email is already logged in with us"})
         if not existing_user:
             return JSONResponse(status_code=400, content={"message": "Email does not exists with us"})
         verification_token = db.query(VerificationToken).filter(
@@ -160,6 +162,9 @@ def registration(flight_booking: FlightBookingDetails, user_id: int, db: Session
     user_id = flight_booking.user_id
     first_name = flight_booking.first_name
     last_name = flight_booking.last_name
+    existing_user = db.query(User).filter(User.id == user_id).first()
+    if existing_user.islogin==False:
+        return JSONResponse(status_code=400, content={"message": "You cannot access the page as you are not logged in"})
     formatted_origin_kiwi = format_location_kiwi(origin_city, country_name_origin)
     formatted_destination_kiwi = format_location_kiwi(destination_city, country_name_destination)
     scrape_kiwi_task.delay(formatted_origin_kiwi, formatted_destination_kiwi, start_date, origin_city, destination_city)
@@ -171,6 +176,7 @@ def registration(flight_booking: FlightBookingDetails, user_id: int, db: Session
             start_date=start_date, end_date=end_date ,user_id=user_id, first_name=first_name, last_name=last_name)
     db.add(flight_info)
     db.commit()
+    existing_user.isprofilecompleted = True
     return JSONResponse(status_code=201, content={"message": "Flight details are saved"})
 
 
@@ -199,6 +205,9 @@ def verify_user(token: str, db: Session = Depends(get_db)):
         )
 
     verification_token.is_used = True
+    existing_user = db.query(User).filter(User.id == verification_token.user_id).first()
+    existing_user.islogin =True
+    existing_user.isauthenticated = True
     db.commit()
 
     return {"message": "Email verified successfully!"}
@@ -250,30 +259,30 @@ def alert(flight_booking_id: int, db: Session = Depends(get_db)):
         }
     )
 
-@app1.get("/v1/get-profile")
-def profile_details(user_details:Userinfo, db: Session = Depends(get_db)):
-    email_id = user_details.email_id
-    existing_user = db.query(User).filter(User.email_id == email_id).first()
+@app1.get("/v1/get-profile/{user_id}")
+def profile_details(user_id:int, db: Session = Depends(get_db)):
+    existing_user = db.query(User).filter(User.id == user_id).first()
     if existing_user.islogin==True:
         user_info = {
             "email_id": existing_user.email_id,
-            "created_at": existing_user.created_at
+            "created_at": str(existing_user.created_at),
+            "profilecompleted": existing_user.isprofilecompleted,
         }
         return JSONResponse(
         status_code=200, 
         content={
             "data": user_info
-        }
-    )
-    if existing_user.islogin==True:
-        return JSONResponse(status=400, content = {"error": "You are not authenticated"})
+        } )
+    if existing_user.islogin==False:
+        return JSONResponse(status_code=400, content = {"error": "You are not authenticated"})
 
-  
+
 @app1.post("/v1/logout/{user_id}")
 def logout(user_id: int, db: Session = Depends(get_db)):
     existing_user = db.query(User).filter(User.id == user_id).first()
     existing_user.islogin = False
     existing_user.isauthenticated = False
-    return JSONResponse(status=200, content={"mesage": "You ahve been logged out"})
+    db.commit()
+    return JSONResponse(status_code=200, content={"mesage": "You have been logged out"})
 
 
