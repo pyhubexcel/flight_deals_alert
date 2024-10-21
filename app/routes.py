@@ -69,10 +69,10 @@ def scrape_kiwi_task(formatted_origin_kiwi, formatted_destination_kiwi, start_da
 
 
 @celery_app.task(name="app.scrape_kayak_process_task")
-def scrape_kayak_process_task(formatted_origin_kayak, formatted_destination_kayak, start_date):
+def scrape_kayak_process_task(formatted_origin_kayak, formatted_destination_kayak, start_date, origin_city, destination_city):
     db = SessionLocal()
     try:
-        kayakmain(formatted_origin_kayak, formatted_destination_kayak, start_date)
+        kayakmain(formatted_origin_kayak, formatted_destination_kayak, start_date, origin_city, destination_city)
     finally:
         db.close()
 
@@ -88,7 +88,6 @@ class FlightBookingDetails(BaseModel):
     end_date: Optional[date]=None
     first_name: str
     last_name: str
-    user_id: int
 
 
 class Alert(BaseModel):
@@ -147,11 +146,11 @@ def login(user_details: Userinfo, db: Session = Depends(get_db)):
             db.commit()
         magic_link = generate_magic_link(token)
         send_verification_email(email_id, magic_link)
-        return JSONResponse(status_code=201, content={"message": "Verification Email is send at your registered email_id and will be valid for only two hours"})
+        return JSONResponse(status_code=201, content={"message": "Verification Email is send at your registered email_id and will be valid for only two hours",  "user_id": existing_user.id})
     return JSONResponse(status_code=400, content={"message": "Please provide a valid email format"})
 
 
-@app1.post("/v1/user-flight-details/{user_id}") 
+@app1.post("/v1/user-flight-details/{user_id}")
 def registration(flight_booking: FlightBookingDetails, user_id: int, db: Session = Depends(get_db)):
     origin_city = flight_booking.origin_city
     destination_city = flight_booking.destination_city
@@ -159,7 +158,6 @@ def registration(flight_booking: FlightBookingDetails, user_id: int, db: Session
     country_name_destination = flight_booking.country_name_destination
     start_date = flight_booking.start_date
     end_date = flight_booking.end_date
-    user_id = flight_booking.user_id
     first_name = flight_booking.first_name
     last_name = flight_booking.last_name
     existing_user = db.query(User).filter(User.id == user_id).first()
@@ -170,13 +168,14 @@ def registration(flight_booking: FlightBookingDetails, user_id: int, db: Session
     scrape_kiwi_task.delay(formatted_origin_kiwi, formatted_destination_kiwi, start_date, origin_city, destination_city)
     formatted_origin_kayak = format_location_kayak(origin_city)
     formatted_destination_kayak = format_location_kayak(destination_city)
-    scrape_kayak_process_task.delay(formatted_origin_kayak, formatted_destination_kayak, start_date)
+    scrape_kayak_process_task.delay(formatted_origin_kayak, formatted_destination_kayak, start_date, origin_city, destination_city) 
     flight_info = FlightBookingInfo(start_destination=origin_city, end_destination=destination_city, 
           start_destination_country=country_name_origin, end_destination_country=country_name_destination,
             start_date=start_date, end_date=end_date ,user_id=user_id, first_name=first_name, last_name=last_name)
     db.add(flight_info)
     db.commit()
     existing_user.isprofilecompleted = True
+    db.commit()
     return JSONResponse(status_code=201, content={"message": "Flight details are saved"})
 
 
@@ -210,7 +209,7 @@ def verify_user(token: str, db: Session = Depends(get_db)):
     existing_user.isauthenticated = True
     db.commit()
 
-    return {"message": "Email verified successfully!"}
+    return {"message": "Email verified successfully!", "please click on this link for redirect": "http://116.202.210.102:3313/UserDetail"}
 
 
 @app1.get("/v1/alert/{flight_booking_id}")

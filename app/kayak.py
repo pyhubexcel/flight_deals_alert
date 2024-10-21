@@ -8,7 +8,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from twocaptcha import TwoCaptcha
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from app.db import saving_flight_data
-import time
+import time, os
 
 
 # Function to initialize WebDriver
@@ -104,6 +104,7 @@ def close_privacy_popup(driver):
         accept_button = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable((By.XPATH, "//button//div[text()='Accept all']"))
         )
+        time.sleep(10)
         accept_button.click()
         print("Closed privacy policy popup.")
        
@@ -113,7 +114,7 @@ def close_privacy_popup(driver):
 
 
 # Main scraping logic
-def scrape_flights(driver, origin , destination, departure_date):
+def scrape_flights(driver, departure_date, origin_city, departure_city):
     time.sleep(5)
 
     def click_show_more():
@@ -216,8 +217,8 @@ def scrape_flights(driver, origin , destination, departure_date):
             "Flight Link": flight_link,
             "Economy Class": economy_class,
             "Flight Unique Id": flight_id,
-            'From City':  origin,
-            'To City': destination,
+            'From City':  origin_city,
+            'To City': departure_city,
             'Departure Date': departure_date,
             'Source Website': "https://www.kayak.co.in/flights/" 
         }
@@ -228,13 +229,13 @@ def scrape_flights(driver, origin , destination, departure_date):
         
      
 
-def kayakmain(origin , destination, departure_date):
+def kayakmain(origin , destination, departure_date, origin_city, departure_city):
     driver = init_driver()
     url =f"https://www.kayak.co.in/flights/{origin}-{destination}/{departure_date}?sort=bestflight_b"
     driver.get(url)
     print("Navigated to Kayak flights page.")
     try:
-        api_key="80b506acd2a1a59f99486b198df8082c"
+        api_key = os.getenv("CAPTCHA-KEY")
         callback_function, sitekey = get_captcha_params(script, driver)
         token = solver_captcha(api_key, sitekey, driver.current_url)
         if token:
@@ -246,7 +247,7 @@ def kayakmain(origin , destination, departure_date):
         close_privacy_popup(driver)
         time.sleep(10)
        
-        scrape_flights(driver, origin , destination, departure_date)
+        scrape_flights(driver, departure_date, origin_city, departure_city)
 
     except Exception as e:
         print(f"An error occurred during execution: {e}")

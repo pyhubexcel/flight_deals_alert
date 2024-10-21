@@ -30,9 +30,10 @@ def format_location_kiwi(city_name, country_name):
 
 
 def format_location_kayak(city_name):
-    with open('cities_data.json', 'r') as file:
+    with open('app/cities_data.json', 'r') as file:
         data = json.load(file)
     city_name = data['cities'][city_name]['airport_codes']
+    city_name = city_name[0]
     return city_name
 
 

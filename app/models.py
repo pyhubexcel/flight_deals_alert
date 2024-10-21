@@ -60,7 +60,7 @@ class VerificationToken(Base):
     is_used = Column(Boolean, default=False)
     expires_at = Column(DateTime)
 
-DATABASE_URL = "postgresql://superdbuser:Java_123@localhost:5432/blaise"
+DATABASE_URL = os.getenv("DATABASE_URL")
 engine = create_engine(DATABASE_URL)
 
 SessionLocal = sessionmaker(bind=engine)
