@@ -3,6 +3,9 @@ from sqlalchemy import (Column, Integer, String, Float, Boolean, Date,
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 Base = declarative_base()
 

@@ -1,13 +1,16 @@
-import re, asyncio
+import re, asyncio, os
 import json
 from fastapi_mail import FastMail, MessageSchema, ConnectionConfig
+from dotenv import load_dotenv
+
+load_dotenv()
 
 conf = ConnectionConfig(
-   MAIL_USERNAME="atul.etech2011@gmail.com",
-   MAIL_PASSWORD="aqvyqthjlhrurdrh",
+   MAIL_USERNAME=os.getenv("SENDER_EMAIL"),
+   MAIL_PASSWORD="MAIL_PASSWORD",
    MAIL_PORT=587,
    MAIL_SERVER="smtp.gmail.com",
-   MAIL_FROM="atul.etech2011@gmail.com",
+   MAIL_FROM=os.getenv("SENDER_EMAIL"),
    USE_CREDENTIALS=True,
    MAIL_STARTTLS=True,
    MAIL_SSL_TLS=False,
@@ -50,16 +53,16 @@ def send_verification_email(email: str, magic_link: str):
 
 def generate_magic_link(token: str):
     # Replace with your domain
-    return f"http://116.202.210.102:8000/verify/{token}"
+    host_url = os.getenv("HOST_URL")
+    return host_url+f"verify/{token}"
 
 
-def flight_details_email(content):
+def flight_details_email(content, email):
     message = MessageSchema(
        subject="Fastapi-Mail module",
-       recipients=["aayush.excel2011@gmail.com"],
+       recipients=[email],
        body=str(content),
        subtype="plain" 
        )
     fm = FastMail(conf)
-    # Running the async function synchronously
     asyncio.run(fm.send_message(message))

@@ -4,7 +4,7 @@ import datetime
 from datetime import date, timedelta
 from typing import List, Optional
 
-# from dotenv import load_dotenv
+from dotenv import load_dotenv
 
 from fastapi import FastAPI, HTTPException, Depends, status
 from fastapi.middleware.cors import CORSMiddleware
@@ -22,6 +22,8 @@ from .kayak import kayakmain
 from .models import (User, FlightBookingInfo, FlightInfo,
                      VerificationToken, SessionLocal)
 
+load_dotenv()
+
 app1 = FastAPI()
 
 # Add CORS middleware
@@ -33,8 +35,8 @@ app1.add_middleware(
     allow_headers=["*"],  
 )
 
-CELERY_BROKER_URL = "redis://localhost:6379/0"
-CELERY_RESULT_BACKEND = "redis://localhost:6379/0"
+CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL")
+CELERY_RESULT_BACKEND = os.getenv("CELERY_BROKER_URL")
 
 celery_app = Celery(
     "app",
@@ -208,8 +210,8 @@ def verify_user(token: str, db: Session = Depends(get_db)):
     existing_user.islogin =True
     existing_user.isauthenticated = True
     db.commit()
-
-    return {"message": "Email verified successfully!", "please click on this link for redirect": "http://116.202.210.102:3313/UserDetail"}
+    host_url = os.getenv("HOST_URL")+"/UserDetail"
+    return {"message": "Email verified successfully!", "please click on this link for redirect": host_url}
 
 
 @app1.get("/v1/alert/{flight_booking_id}")
@@ -248,8 +250,11 @@ def alert(flight_booking_id: int, db: Session = Depends(get_db)):
 
     if not matching_flights:
         raise HTTPException(status_code=404, detail="No matching flights found")
-
-    flight_details_email(flight_details)
+    
+    user_id = flight_booking.user_id
+    user = db.query(User).filter(User.id == user_id).first()
+    email = user.email_id
+    flight_details_email(flight_details, email)
     return JSONResponse(
         status_code=200, 
         content={
