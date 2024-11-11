@@ -20,7 +20,7 @@ if config.config_file_name is not None:
 
 config.set_main_option(
     'sqlalchemy.url',
-    os.getenv('SQLALCHEMY_DATABASE_URL', 'default_value_if_not_set')
+    os.getenv('DATABASE_URL', 'default_value_if_not_set')
 )
 
 # add your model's MetaData object here
