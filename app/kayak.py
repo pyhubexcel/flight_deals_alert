@@ -235,8 +235,8 @@ def kayakmain(origin , destination, departure_date, origin_city, departure_city)
     driver.get(url)
     print("Navigated to Kayak flights page.")
     try:
+        api_key = os.getenv("CAPTCHA-KEY")
         if "recaptcha" in driver.page_source.lower():
-            api_key = os.getenv("CAPTCHA-KEY")
             callback_function, sitekey = get_captcha_params(script, driver)
             token = solver_captcha(api_key, sitekey, driver.current_url)
             if token:
@@ -247,7 +247,7 @@ def kayakmain(origin , destination, departure_date, origin_city, departure_city)
 
             close_privacy_popup(driver)
             time.sleep(10)
-        
+       
         scrape_flights(driver, departure_date, origin_city, departure_city)
 
     except Exception as e:

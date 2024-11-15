@@ -6,24 +6,40 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: Java123
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Java123
       POSTGRES_DB: blaise_test
     ports:
+      - "5435:5432"
       - "5435:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - backend
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 30s
+      retries: 5
+      start_period: 10s
+      timeout: 20s
 
   redis:
     image: redis:6
     networks:
       - backend
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      retries: 3
+      start_period: 10s
+      timeout: 20s
 
   web:
     build:
       context: .
       dockerfile: Dockerfile
     environment:
+      DATABASE_URL: postgresql://postgres:Java123@db:5432/blaise_test
       DATABASE_URL: postgresql://postgres:Java123@db:5432/blaise_test
       CELERY_BROKER_URL: redis://redis:6379/0
       CELERY_RESULT_BACKEND: redis://redis:6379/0
@@ -33,12 +49,13 @@ services:
       uvicorn app.routes:app1 --host 0.0.0.0 --port 8088
       "
     ports:
-      - "8088:8088" 
+      - "8088:8088"
     depends_on:
       - db
       - redis
     networks:
       - backend
+    user: "1000:1000"  
 
   celery:
     build:
@@ -47,6 +64,7 @@ services:
     command: celery -A app.routes worker --concurrency=10 --loglevel=info -Q app_queue
     environment:
       DATABASE_URL: postgresql://postgres:Java123@db:5432/blaise_test
+      DATABASE_URL: postgresql://postgres:Java123@db:5432/blaise_test
       CELERY_BROKER_URL: redis://redis:6379/0
       CELERY_RESULT_BACKEND: redis://redis:6379/0
     depends_on:
@@ -54,10 +72,11 @@ services:
       - redis
     networks:
       - backend
+    user: "1000:1000" 
 
 volumes:
   postgres_data:
-              driver: local
+    driver: local
 
 networks:
   backend:
